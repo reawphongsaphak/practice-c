@@ -206,10 +206,10 @@ down:
     x = array[0]-1;
     y = array[1]-1;
 
-    if (y+1 < 5 && board[y+1][x] == f1_char && board[y+1][x] == sp){
+    if (y+1 < 5 && board[y+1][x] == f1_char){
         goto f1;
     }
-    if (turn%2==1 && y+1 < 5){
+    if (turn%2==1 && y+1 < 5 && board[y+1][x] == sp){
         board[y][x] = ' ';
         board[y+1][x] = 'X';
         if (f2_val == 0){
@@ -241,7 +241,7 @@ right:
     x = array[0]-1;
     y = array[1]-1;
 
-    if (x+1 < 5 && board[y][x+1] == f1_char && board[y][x+1] == sp){
+    if (x+1 < 5 && board[y][x+1] == f1_char){
         goto f1;
     }
     if (turn%2==1 && x+1 < 5 && board[y][x+1] == sp){
