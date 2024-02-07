@@ -1,16 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
-// board[y][x]
+int board[5][5];
 int turn = 1;
+int array[2];
+int game = 1;
 int x;
 int y;
-int array[2];
-int board[5][5];
-int game = 1;
-char piece = 'X';
+int X_count = 6;
+int O_count = 6;
+int f_val = 0;
+
+
+char p1_piece = 'X';
+char p2_piece = 'O';
 char dir;
 char P_move[3];
 char check_piece;
@@ -19,7 +23,6 @@ char D = 'd';
 char R = 'r';
 char L = 'l';
 char sp = ' ';
-
 
 void setBoard() 
 {
@@ -88,37 +91,25 @@ void split(char input[])
     // }
 }
 
-int main()
-{
+int main(){
+
     setBoard();
     show();
     goto p1;
 
+    // player 1 turn
 p1:
-    printf("P1 please enter what piece you  want to move :");
+    printf("P1 please enter what piece you  want to move :"); //ให้เลือกว่าจะเดินตัวไหน (พิกัด x,y) !! เปลี่ยนได้
     scanf(" %[^\n]*c\n",P_move);  
     // printf("%s\n",P_move);
     split(P_move);
 
-    printf("P1 please enter what direction you  want to move(u, d ,r ,l) :");
+    printf("P1 please enter what direction you  want to move(u, d ,r ,l) :"); // ให้เลือกว่าจะเดินทิศไหน u,d,r,l !! เปลี่ยนได้
     scanf(" %c",&dir);
 
     goto check_move;
 
-    if (U == dir){
-        goto up;
-    }
-    if (D == dir){
-        goto down;
-    }
-    if (L == dir){
-        goto left;
-    }
-    if (R == dir){
-        goto right;
-    }
-
-    
+//  player 2 turn
 p2:
     printf("P2 please enter what piece you want to move :");
     scanf(" %[^\n]*c\n",P_move);  
@@ -126,9 +117,12 @@ p2:
     split(P_move);
 
     printf("P2 please enter what direction you  want to move(u, d ,r ,l) :");
-    scanf(" %c",&dir);   
+    scanf(" %c",&dir);  
+
+    goto check_move;
 
 
+ // check if its can move
 check_move:
     x = array[0]-1;
     y = array[1]-1;
@@ -139,6 +133,7 @@ check_move:
     else if (turn %2 == 0){
         check_piece = 'O';
     }
+
 
     if (check_piece == board[y][x]){
         if (U == dir){
@@ -154,6 +149,8 @@ check_move:
             goto right;
         }
     }
+
+
     else{
         printf("\nplese select another piece or direction !!!\n\n");
         if (turn%2==1){
@@ -164,109 +161,101 @@ check_move:
         }
     }
 
-
+// move to up direction
 up:
     x = array[0]-1;
     y = array[1]-1;
 
-    if (turn%2==1 && y-1 >= 0){
+
+    if (turn%2==1 && y-1 >= 0 && board[y-1][x] == sp){
         board[y][x] = ' ';
         board[y-1][x] = 'X';
         show();
-        goto check_row;
+        goto f1;
     }
-    else if (turn%2==0 && y-1 >= 0){
+    else if (turn%2==0 && y-1 >= 0 && board[y-1][x] == sp){
         board[y][x] = ' ';
         board[y-1][x] = 'O';
         show();
-        goto check_row;
+        goto f1;
     }
     else{
-        printf("\nplese select another piece or direction !!!\n\n");
-        if (turn%2==1){
-            goto p1;
-        }
-        else if (turn %2 == 0){
-            goto p2;
-        }
+        goto else_move;
     }
 
-
+// move to down direction
 down:
     x = array[0]-1;
     y = array[1]-1;
+
     if (turn%2==1 && y+1 < 5){
         board[y][x] = ' ';
         board[y+1][x] = 'X';
         show();
-        goto check_row;
+        goto f1;
     }
-    else if (turn%2==0 && y+1 < 5){
+    else if (turn%2==0 && y+1 < 5 && board[y+1][x] == sp){
         board[y][x] = ' ';
         board[y+1][x] = 'O';
         show();
-        goto check_row;
+        goto f1;
     }
     else{
-        printf("\nplese select another piece or direction !!!\n\n");
-        if (turn%2==1){
-            goto p1;
-        }
-        else if (turn %2 == 0){
-            goto p2;
-        }
+        goto else_move; 
     }
-    
 
+
+// move to right 
 right:
     x = array[0]-1;
     y = array[1]-1;
-    if (turn%2==1 && x+1 < 5){
+
+    if (turn%2==1 && x+1 < 5 && board[y][x+1] == sp){
         board[y][x] = ' ';
         board[y][x+1] = 'X';
         show();
-        goto check_row;
+        goto f1;
     }
-    else if (turn%2==0 && x+1 < 5){
+    else if (turn%2==0 && x+1 < 5 && board[y][x+1] == sp){
         board[y][x] = ' ';
         board[y][x+1] = 'O';
         show();
-        goto check_row;
+        goto f1;
     }
     else{
-        printf("\nplese select another piece or direction !!!\n\n");
-        if (turn%2==1){
-            goto p1;
-        }
-        else if (turn %2 == 0){
-            goto p2;
-        }
+        goto else_move;
     }
 
 
+// move to left
 left:
     x = array[0]-1;
     y = array[1]-1;
-    if (turn%2==1 && x-1 >= 0){
+
+    if (turn%2==1 && x-1 >= 0 && board[y][x-1] == sp){
         board[y][x] = ' ';
         board[y][x-1] = 'X';
         show();
-        goto check_row;
+        goto f1;
     }
-    else if (turn%2==0 && x-1 >= 0){
+    else if (turn%2==0 && x-1 >= 0 && board[y][x-1] == sp){
         board[y][x] = ' ';
         board[y][x-1] = 'O';
         show();
-        goto check_row;
+        goto f1;
     }
     else{
-        printf("\nplese select another piece or direction !!!\n\n");
-        if (turn%2==1){
-            goto p1;
-        }
-        else if (turn %2 == 0){
-            goto p2;
-        }
+        goto else_move;
+    }
+
+
+else_move:
+    printf("\nplese select another piece or direction !!!\n\n");
+    if (turn%2==1){
+        goto p1;
+    }
+    else if (turn %2 == 0){
+        goto p2;
     }
 
 
@@ -275,7 +264,7 @@ check_row:
     // printf("check row\n");
     for (int i=0; i<5; i++)
     {
-       if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == board[i][3] || board[i][1] == board[i][2] && board[i][1] == board[i][3] && board[i][1] == board[i][4]){
+       if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == board[i][3] && board[i][0] != sp || board[i][1] == board[i][2] && board[i][1] == board[i][3] && board[i][1] == board[i][4] && board[i][1] != sp){
             goto win;
         }
         else{
@@ -310,6 +299,16 @@ check_dia_l:
         goto win;
     }
     else{
+        goto check_count;
+    }
+
+
+check_count:
+    // printf("Check count\n");
+    if (X_count < 4 || O_count < 4){
+        goto win;
+    }
+    else{
         turn++;
         if (turn%2==1){
             goto p1;
@@ -318,6 +317,376 @@ check_dia_l:
             goto p2;
         }
     }
+
+
+f1:
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 4; j++){
+            if (board[i][j] == board[i][j+1] && board[i][j] == board[i+1][j] && board[i][j] == board[i+1][j+1] && board[i][j] != sp){
+                if (board[i][j] == p1_piece){
+                    f_val = 0;
+                    goto f_remove;
+                }
+                else if (board[i][j] == p2_piece){
+                    f_val = 1;
+                    goto f_remove;
+                }
+            }
+        }
+    }
+    goto f2;
+
+f2:
+    // 0,0 to 4,4
+    if (board[0][0] == board[4][4] && board[1][1] == board[2][2] && board[2][2] == board[3][3] && board[3][3] != sp && board[0][0] != sp){
+        if (board[0][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 0,0 to 3,3,
+    else if (board[0][0] == board[3][3] && board[1][1] == board[2][2] && board[1][1] != board[0][0] && board[1][1] != sp && board[0][0] != sp){
+        if (board[0][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 1,1 to 4,4
+    else if (board[1][1] == board[4][4] && board[2][2] == board[3][3] && board[1][1] != board[2][2] && board[2][2] != sp && board[1][1] != sp){
+        if (board[1][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 0,0 to 2,2
+    else if (board[0][0] == board[2][2] && board[0][0] != board[1][1] && board[1][1] != sp && board[0][0] != sp){
+        if (board[0][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 1,1 to 3,3
+    else if (board[1][1] == board[3][3] && board[1][1] != board[2][2] && board[2][2] != sp && board[1][1] != sp){
+        if (board[1][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 2,2 to 4,4
+    else if (board[2][2] == board[4][4] && board[2][2] != board[3][3] && board[3][3] != sp && board[2][2] != sp){
+        if (board[2][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[2][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+
+    // 1,0 to 4,3
+    else if (board[0][1] == board[3][4] && board[1][2] == board[2][3] && board[1][2] != board[0][1] && board[2][1] != sp && board[0][1] != sp){
+        if (board[0][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 1,0 to 3,2
+    else if (board[0][1] == board[2][3] && board[1][2] != board[0][1] && board[1][2] != sp && board[0][1] != sp){
+        if (board[0][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 2,1 to 4,3
+    else if (board[1][2] == board[3][4] && board[2][3] != board[1][2] && board[2][3] != sp && board[1][2] != sp){
+        if (board[1][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 2,0 to 4,2
+    else if (board[0][2] == board[2][4] && board[0][2] != board[1][3] && board[1][3] != sp && board[0][2] != sp){
+        if (board[0][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 0,1 to 3,4
+    else if (board[1][0] == board[4][3] && board[2][1] == board[3][2] && board[2][1] != board[1][0] && board[1][2] != sp && board[1][0] != sp){
+        if (board[1][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 0,1 to 2,3
+    else if (board[1][0] == board[3][2] && board[2][1] != board[1][0] && board[2][1] != sp && board[1][0] != sp){
+        if (board[1][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 1,2 to 3,4
+    else if (board[2][1] == board[4][3] && board[3][2] != board[2][1] && board[3][2] != sp && board[2][1] != sp){
+        if (board[2][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[2][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+        // 0,2 to 2,4
+    else if (board[2][0] == board[4][2] && board[2][0] != board[3][1] && board[3][1] != sp && board[2][0] != sp){
+        if (board[2][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[2][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // #################################################
+    // ###                                           ###
+    // ###                    DIA-L                  ###
+    // ###                                           ###
+    // #################################################
+    // 4,0 to 0,4
+    else if (board[0][4] == board[4][0] && board[3][1] == board[2][2] && board[2][2] == board[1][3] && board[2][2] != sp && board[0][4] != sp){
+        if (board[0][4] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][4] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 4,0 to 1,3
+
+    else if (board[0][4] == board[3][1] && board[2][2] == board[1][3] && board[0][4] != board[1][3] && board[3][1] != sp && board[0][4] != sp){
+        if (board[0][4] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][4] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 3,1 to 0,4
+    else if (board[4][0] == board[1][3] && board[2][2] == board[3][1] && board[4][0] != board[3][1] && board[3][1] != sp && board[4][0] != sp){
+        if (board[4][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[4][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 4,0 to 2,2
+    else if (board[0][4] == board[2][2] && board[0][4] != board[1][3] && board[1][3] != sp && board[2][2] != sp){
+        if (board[0][4] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][4] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 3,1 to 1,3
+    else if (board[1][3] == board[3][1] && board[1][3] != board[2][2] && board[1][3] != sp && board[2][2] != sp){
+        if (board[1][3] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][3] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 2,2 to 0,4
+    else if (board[2][2] == board[4][0] && board[3][1] != board[2][2] && board[3][1] != sp && board[2][2] != sp){
+        if (board[2][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[2][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 3,0 to 0,3
+    else if (board[3][0] == board[0][3] && board[1][2] == board[2][1] && board[3][0] != board[2][1] && board[3][0] != sp && board[2][1] != sp){
+        if (board[3][0] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[3][0] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 3,0 to 1,2
+    else if (board[0][3] == board[2][1] && board[2][1] != board[1][2] && board[0][3] != sp && board[1][2] != sp){
+        if (board[0][3] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][3] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 2,1 to 0,3
+    else if (board[1][2] == board[3][0] && board[1][2] != board[2][1] && board[3][0] != sp && board[2][1] != sp){
+        if (board[1][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 2,0 to 0,2
+    else if (board[0][2] == board[2][0] && board[1][1] != board[0][2] && board[0][2] != sp && board[1][1] != sp){
+        if (board[0][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[0][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 4,1 to 1,4
+    else if (board[4][1] == board[1][4] && board[3][2] == board[2][3] && board[1][4] != board[2][3] && board[3][2] != sp && board[4][1] != sp){
+        if (board[4][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[4][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 4,1 to 2,3
+    else if (board[1][4] == board[3][2] && board[1][4] != board[2][3] && board[1][4] != sp && board[2][3] != sp){
+        if (board[1][4] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[1][4] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 3,2 to 1,4
+    else if (board[4][1] == board[2][3] && board[4][1] != board[3][2] && board[4][1] != sp && board[3][2] != sp){
+        if (board[4][1] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[4][1] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+    // 4.2 to 2,4
+    else if (board[4][2] == board[2][4] && board[4][2] != board[3][3] && board[4][2] != sp && board[3][3] != sp){
+        if (board[4][2] == p1_piece){
+            f_val = 0;
+            goto f_remove;
+        }
+        else if(board[4][2] == p2_piece){
+            f_val = 1;
+            goto f_remove;
+        }
+    }
+
+    else{
+        goto check_row;
+    }
+
+
+f_remove:
+    if (turn%2 == 0 && f_val == 1){
+        for (int i = 0; i < 5 ; i++){
+            for (int j = 0; j < 5 ; j++){
+                if (board[i][j] == p1_piece){
+                    board[i][j]= ' ';
+                    X_count -= 1;
+                    show();
+                    printf("\nP1 your piece has been removed!!!\n");
+                    goto check_row;
+                }
+            }
+        }
+    }
+    else if (turn%2 == 1 && f_val == 0){
+        for (int i = 0; i < 5 ; i++){
+            for (int j = 0; j < 5 ; j++){
+                if (board[i][j] == p2_piece){
+                    board[i][j]= ' ';
+                    O_count -= 1;
+                    show();
+                    printf("\nP2 your piece has been removed!!!\n");
+                    goto check_row;
+                }
+            }
+        }       
+    }
+
+    goto check_row;
 
 
 win:
