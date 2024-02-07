@@ -338,15 +338,9 @@ f1:
 
 f2:
     // 0,0 to 4,4
-    if (board[0][0] == board[4][4] && board[1][1] != board[0][0] && board[1][1] == board[2][2] && board[2][2] == board[3][3] && board[3][3] != sp && board[0][0] != sp){
-        if (board[0][0] == p1_piece){
-            f_val = 0;
-            goto f_remove;
-        }
-        else if(board[0][0] == p2_piece){
-            f_val = 1;
-            goto f_remove;
-        }
+    if (board[0][0] == board[4][4] && board[0][0] != sp){
+        // printf("in con f2\n");
+        goto f2_remove;
     }
     // #################################################
     // ###                                           ###
@@ -354,15 +348,13 @@ f2:
     // ###                                           ###
     // #################################################
     // 4,0 to 0,4
-    else if (board[0][4] == board[4][0] && board[3][1] == board[2][2] && board[2][2] == board[1][3] && board[2][2] != sp && board[0][4] != sp){
-        if (board[0][4] == p1_piece){
-            f_val = 0;
-            goto f_remove;
-        }
-        else if(board[0][4] == p2_piece){
-            f_val = 1;
-            goto f_remove;
-        }
+    else if (board[0][4] == board[4][0] && board[0][4] != sp){
+        // printf("in con f2\n");
+        goto f2_remove_2;
+    }
+
+    else{
+        goto check_row;
     }
 
 f_remove:
@@ -395,6 +387,96 @@ f_remove:
 
     goto check_row;
 
+f2_remove:
+    // printf("%d",turn);
+    // printf("\n in f2 remove \n");
+    if (turn%2 == 1){
+        if (board[1][1] == p1_piece){
+            board[1][1] = ' ';
+            show();
+            printf("\nP1 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[1][1] == p1_piece){
+            board[2][2] = ' ';
+            show();
+            printf("\nP1 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[3][3] == p1_piece){
+            board[3][3] = ' ';
+            show();
+            printf("\nP1 your piece has been removed!!!\n");
+            goto check_row;
+        }
+    }
+    if (turn%2 == 0){
+        if (board[1][1] == p2_piece){
+            board[1][1] = ' ';
+            show();
+            printf("\nP2 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[2][2] == p2_piece){
+            board[2][2] = ' ';
+            show();
+            printf("\nP2 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[3][3] == p2_piece){
+            board[3][3] = ' ';
+            show();
+            printf("\nP2 your piece has been removed!!!\n");
+            goto check_row;
+        }
+    }
+    goto check_row;
+
+
+f2_remove_2:
+    // printf("%d",turn);
+    // printf("\n in f2 remove \n");
+    if (turn%2 == 1){
+        if (board[1][3] == p1_piece){
+            board[1][3] = ' ';
+            show();
+            printf("\nP1 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[2][2] == p1_piece){
+            board[2][2] = ' ';
+            show();
+            printf("\nP1 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[3][1] == p1_piece){
+            board[3][1] = ' ';
+            show();
+            printf("\nP1 your piece has been removed!!!\n");
+            goto check_row;
+        }
+    }
+    if (turn%2 == 0){
+        if (board[1][3] == p2_piece){
+            board[1][3] = ' ';
+            show();
+            printf("\nP2 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[2][2] == p2_piece){
+            board[2][2] = ' ';
+            show();
+            printf("\nP2 your piece has been removed!!!\n");
+            goto check_row;
+        }
+        else if (board[3][1] == p2_piece){
+            board[3][1] = ' ';
+            show();
+            printf("\nP2 your piece has been removed!!!\n");
+            goto check_row;
+        }
+    }
+    goto check_row;
 
 win:
     if (turn%2==1){
