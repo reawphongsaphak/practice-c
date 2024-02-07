@@ -338,7 +338,7 @@ f1:
 
 f2:
     // 0,0 to 4,4
-    if (board[0][0] == board[4][4] && board[0][0] != sp){
+    if (board[0][0] == board[4][4] && board[0][0] != sp && board[1][1] == board[2][2] && board[1][1] == board[3][3] && board[1][1] != sp && board[1][1] != board[0][0]){
         // printf("in con f2\n");
         goto f2_remove;
     }
@@ -348,7 +348,7 @@ f2:
     // ###                                           ###
     // #################################################
     // 4,0 to 0,4
-    else if (board[0][4] == board[4][0] && board[0][4] != sp){
+    else if (board[0][4] == board[4][0] && board[0][4] != sp && board[1][3] == board[2][2] && board[1][3] == board[3][1] && board[1][3] != sp && board[1][3] != board[4][0]){
         // printf("in con f2\n");
         goto f2_remove_2;
     }
