@@ -424,7 +424,12 @@ f1:
     printf("select column you want to move in the same row :");
     scanf("%d",&f1_bonus);
     board[y][x] = ' ';
-    board[y][f1_bonus-1] = 'X';
+    if (turn%2==1){
+        board[y][f1_bonus-1] = 'X';
+    }
+    else if (turn%2==0){
+        board[y][f1_bonus-1] = 'O';
+    }
     show();
     goto check_row;
 
