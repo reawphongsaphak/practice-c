@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
 // board[y][x]
-
-//  set ตัวแปรที่ใช้
 int turn = 1;
 int x;
 int y;
@@ -29,7 +26,6 @@ char sp = ' ';
 char f1_char = '+';
 
 
-//  set board
 void setBoard() 
 {
     for (int i = 0; i < 5; i++) 
@@ -71,7 +67,7 @@ void setBoard()
     
 }
 
-// ใช้โชว์ บอร์ด
+
 void show() {
     printf("  1   2   3   4   5  \n\n");
     for (int i = 0; i < 5; i++)
@@ -82,7 +78,6 @@ void show() {
 }
 
 
-// แยก input
 void split(char input[])
 {
     int i=0;
@@ -104,13 +99,11 @@ void split(char input[])
     // }
 }
 
-
 int main()
 {
     setBoard();
     show();
     goto p1;
-
 
 // player 1 turn
 p1:
@@ -124,7 +117,6 @@ p1:
 
     goto check_move;
 
-
 //  player 2 turn
 p2:
     printf("P2 please enter what piece you want to move :");
@@ -133,9 +125,7 @@ p2:
     split(P_move);
 
     printf("P2 please enter what direction you  want to move(u, d ,r ,l) :");
-    scanf(" %c",&dir);
-    goto check_move;
-
+    scanf(" %c",&dir);   
 
 // check if its can move
 check_move:
@@ -315,6 +305,7 @@ left:
     }
 
 
+
 else_move:
     printf("\nplese select another piece or direction !!!\n\n");
     if (turn%2==1){
@@ -350,8 +341,6 @@ check_col:
             goto check_dia_r;
         }
     }
-
-
 check_dia_r:
     // printf("check dia_r\n");
     if ((board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] == board[3][3] && board[0][0] != sp) || (board[1][1] == board[2][2] && board[1][1] == board[3][3] && board[1][1] == board[4][4] && board[1][1] != sp) || (board[1][0] == board[2][1] && board[1][0] == board[3][2] && board[1][0] == board[4][3] && board[1][0] != sp) || (board[0][1] == board[1][2] && board[0][1] == board[2][3] && board[0][1] == board[3][4] && board[0][1] != sp)){
@@ -361,21 +350,13 @@ check_dia_r:
         goto check_dia_l;
     }
 
-
 check_dia_l:
     // printf("check dia_l\n");
     if (board[0][4] == board[1][3] && board[0][4] == board[2][2] && board[0][4] == board[3][1] && board[0][4] != sp || board[1][3] == board[2][2] && board[1][3] == board[3][1] && board[1][3] == board[4][0] && board[1][3] != sp || board[0][3] == board[1][2] && board[0][3] == board[2][1] && board[0][3] == board[3][0] && board[0][3] != sp || board[1][4] == board[2][3] && board[1][4] == board[3][2] && board[1][4] == board[4][1] && board[1][4] != sp){
         goto win;
     }
-    else{
-        turn++;
-        if (turn%2==1){
-            goto p1;
-        }
-        else if (turn %2 == 0){
-            goto p2;
-        }
-    }
+
+    goto f2;
 
 
 f1:
@@ -443,30 +424,29 @@ f1:
     printf("select column you want to move in the same row :");
     scanf("%d",&f1_bonus);
     board[y][x] = ' ';
-    if (turn%2==1 && f1_bonus-1 < 5){
-            board[y][f1_bonus-1] = 'X';
-            show();
-            goto check_row;
-        }
-    else if (turn%2==0 && f1_bonus-1 < 5){
-            board[y][f1_bonus-1] = 'O';
-            show();
-            goto check_row;
-    }
-    
-
+    board[y][f1_bonus-1] = 'X';
+    show();
+    goto check_row;
 
 f2:
 
     for (int i = 1; i<4; i++){
         for (int j = 1; j<4; j++){
             if (board[i][j] == board[i][j+1] && board[i][j] == board[i][j-1] && board[i][j] == board[i-1][j] && board[i][j] == board[i+1][j] && board[i][j] != sp){
-                f2_val = 0;
+                turn++;
+                goto win;
             }
         }
     }
-    goto check_row;
-
+    {
+        turn++;
+        if (turn%2==1){
+            goto p1;
+        }
+        else if (turn %2 == 0){
+            goto p2;
+        }
+    }
 
 win:
     if (turn%2==1){
