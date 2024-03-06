@@ -14,7 +14,6 @@ int game = 1;
 int f1_bonus;
 int f2_val = 1;
 
-char piece = 'X';
 char dir;
 char P_move[3];
 char check_piece;
@@ -318,16 +317,14 @@ else_move:
 
 check_row:
     // check in same rows
-    // printf("check row\n");
+    printf("check row\n");
     for (int i=0; i<5; i++)
     {
-       if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == board[i][3] || board[i][1] == board[i][2] && board[i][1] == board[i][3] && board[i][1] == board[i][4]){
+       if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == board[i][3] && board[i][3] != sp || board[i][1] == board[i][2] && board[i][1] == board[i][3] && board[i][1] == board[i][4] && board[i][3] != sp){
             goto win;
         }
-        else{
-            goto check_col;
-        }
     }
+    goto check_col;
 
 
 check_col:
@@ -337,10 +334,9 @@ check_col:
         if (board[0][i] == board[1][i] && board[0][i] == board[2][i] &&board[0][i] == board[3][i] && board[0][i] != sp || board[1][i] == board[2][i] && board[1][i] == board[3][i] && board[1][i] == board[4][i] && board[1][i] != sp ){
             goto win;
         }
-        else{
-            goto check_dia_r;
-        }
     }
+    goto check_dia_r;
+
 check_dia_r:
     // printf("check dia_r\n");
     if ((board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] == board[3][3] && board[0][0] != sp) || (board[1][1] == board[2][2] && board[1][1] == board[3][3] && board[1][1] == board[4][4] && board[1][1] != sp) || (board[1][0] == board[2][1] && board[1][0] == board[3][2] && board[1][0] == board[4][3] && board[1][0] != sp) || (board[0][1] == board[1][2] && board[0][1] == board[2][3] && board[0][1] == board[3][4] && board[0][1] != sp)){
@@ -434,12 +430,12 @@ f1:
     goto check_row;
 
 f2:
-
     for (int i = 1; i<4; i++){
         for (int j = 1; j<4; j++){
             if (board[i][j] == board[i][j+1] && board[i][j] == board[i][j-1] && board[i][j] == board[i-1][j] && board[i][j] == board[i+1][j] && board[i][j] != sp){
                 turn++;
                 goto win;
+                break;
             }
         }
     }
