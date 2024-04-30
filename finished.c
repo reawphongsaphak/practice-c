@@ -2,19 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-int board[5][5];
+// board[y][x]
 int turn = 1;
-int array[2];
-int game = 1;
 int x;
 int y;
-int X_count = 6;
-int O_count = 6;
-int f_val = 0;
+int f1_x = 1;
+int f1_y = 1;
+int array[2];
+int board[5][5];
+int game = 1;
+int f1_bonus;
+int f2_val = 1;
 
-
-char p1_piece = 'X';
-char p2_piece = 'O';
 char dir;
 char P_move[3];
 char check_piece;
@@ -23,6 +22,8 @@ char D = 'd';
 char R = 'r';
 char L = 'l';
 char sp = ' ';
+char f1_char = '+';
+
 
 void setBoard() 
 {
@@ -57,6 +58,12 @@ void setBoard()
             }
         }
     }
+    // if want to random
+    // f1_x = (rand() % 3)+1;
+    // f1_y = (rand() % 3)+1;
+    board[f1_y][f1_x] = '+';
+    board[3][3] = '+';
+    
 }
 
 
@@ -91,20 +98,20 @@ void split(char input[])
     // }
 }
 
-int main(){
-
+int main()
+{
     setBoard();
     show();
     goto p1;
 
-    // player 1 turn
+// player 1 turn
 p1:
-    printf("P1 please enter what piece you  want to move :"); //ให้เลือกว่าจะเดินตัวไหน (พิกัด x,y) !! เปลี่ยนได้
+    printf("P1 please enter what piece you  want to move :");
     scanf(" %[^\n]*c\n",P_move);  
     // printf("%s\n",P_move);
     split(P_move);
 
-    printf("P1 please enter what direction you  want to move(u, d ,r ,l) :"); // ให้เลือกว่าจะเดินทิศไหน u,d,r,l !! เปลี่ยนได้
+    printf("P1 please enter what direction you  want to move(u, d ,r ,l) :");
     scanf(" %c",&dir);
 
     goto check_move;
@@ -117,12 +124,9 @@ p2:
     split(P_move);
 
     printf("P2 please enter what direction you  want to move(u, d ,r ,l) :");
-    scanf(" %c",&dir);  
+    scanf(" %c",&dir);   
 
-    goto check_move;
-
-
- // check if its can move
+// check if its can move
 check_move:
     x = array[0]-1;
     y = array[1]-1;
@@ -166,18 +170,30 @@ up:
     x = array[0]-1;
     y = array[1]-1;
 
-
+    if (y-1 >= 0 && board[y-1][x] == f1_char){
+        goto f1;
+    }
     if (turn%2==1 && y-1 >= 0 && board[y-1][x] == sp){
         board[y][x] = ' ';
         board[y-1][x] = 'X';
+        if (f2_val == 0){
+            board[y][x] = 'X';
+            board[y-1][x] = ' ';
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else if (turn%2==0 && y-1 >= 0 && board[y-1][x] == sp){
         board[y][x] = ' ';
         board[y-1][x] = 'O';
+        if (f2_val == 0){
+            board[y][x] = 'X';
+            board[y-1][x] = ' ';
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else{
         goto else_move;
@@ -188,17 +204,30 @@ down:
     x = array[0]-1;
     y = array[1]-1;
 
-    if (turn%2==1 && y+1 < 5){
+    if (y+1 < 5 && board[y+1][x] == f1_char){
+        goto f1;
+    }
+    if (turn%2==1 && y+1 < 5 && board[y+1][x] == sp){
         board[y][x] = ' ';
         board[y+1][x] = 'X';
+        if (f2_val == 0){
+            board[y][x] = 'X';
+            board[y+1][x] = ' ';
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else if (turn%2==0 && y+1 < 5 && board[y+1][x] == sp){
         board[y][x] = ' ';
         board[y+1][x] = 'O';
+        if (f2_val == 0){
+            board[y][x] = 'O';
+            board[y+1][x] = ' ';
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else{
         goto else_move; 
@@ -210,17 +239,30 @@ right:
     x = array[0]-1;
     y = array[1]-1;
 
+    if (x+1 < 5 && board[y][x+1] == f1_char){
+        goto f1;
+    }
     if (turn%2==1 && x+1 < 5 && board[y][x+1] == sp){
         board[y][x] = ' ';
         board[y][x+1] = 'X';
+        if (f2_val == 0){
+            board[y][x] = 'X';
+            board[y][x+1] = ' ';
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else if (turn%2==0 && x+1 < 5 && board[y][x+1] == sp){
         board[y][x] = ' ';
         board[y][x+1] = 'O';
+        if (f2_val == 0){
+            board[y][x] = 'O';
+            board[y][x+1] = ' ';
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else{
         goto else_move;
@@ -232,21 +274,35 @@ left:
     x = array[0]-1;
     y = array[1]-1;
 
+    if (x-1 >= 0 && board[y][x-1] == f1_char){
+        goto f1;
+    }
     if (turn%2==1 && x-1 >= 0 && board[y][x-1] == sp){
         board[y][x] = ' ';
         board[y][x-1] = 'X';
+        if (f2_val == 0){
+            board[y][x] = 'X';
+            board[y][x-1] = ' ';  
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else if (turn%2==0 && x-1 >= 0 && board[y][x-1] == sp){
         board[y][x] = ' ';
         board[y][x-1] = 'O';
+        if (f2_val == 0){
+            board[y][x] = 'O';
+            board[y][x-1] = ' ';  
+            goto else_move;
+        }
         show();
-        goto f1;
+        goto check_row;
     }
     else{
         goto else_move;
     }
+
 
 
 else_move:
@@ -261,16 +317,14 @@ else_move:
 
 check_row:
     // check in same rows
-    // printf("check row\n");
+    printf("check row\n");
     for (int i=0; i<5; i++)
     {
-       if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == board[i][3] && board[i][0] != sp || board[i][1] == board[i][2] && board[i][1] == board[i][3] && board[i][1] == board[i][4] && board[i][1] != sp){
+       if (board[i][0] == board[i][1] && board[i][0] == board[i][2] && board[i][0] == board[i][3] && board[i][3] != sp || board[i][1] == board[i][2] && board[i][1] == board[i][3] && board[i][1] == board[i][4] && board[i][3] != sp){
             goto win;
         }
-        else{
-            goto check_col;
-        }
     }
+    goto check_col;
 
 
 check_col:
@@ -280,10 +334,9 @@ check_col:
         if (board[0][i] == board[1][i] && board[0][i] == board[2][i] &&board[0][i] == board[3][i] && board[0][i] != sp || board[1][i] == board[2][i] && board[1][i] == board[3][i] && board[1][i] == board[4][i] && board[1][i] != sp ){
             goto win;
         }
-        else{
-            goto check_dia_r;
-        }
     }
+    goto check_dia_r;
+
 check_dia_r:
     // printf("check dia_r\n");
     if ((board[0][0] == board[1][1] && board[0][0] == board[2][2] && board[0][0] == board[3][3] && board[0][0] != sp) || (board[1][1] == board[2][2] && board[1][1] == board[3][3] && board[1][1] == board[4][4] && board[1][1] != sp) || (board[1][0] == board[2][1] && board[1][0] == board[3][2] && board[1][0] == board[4][3] && board[1][0] != sp) || (board[0][1] == board[1][2] && board[0][1] == board[2][3] && board[0][1] == board[3][4] && board[0][1] != sp)){
@@ -298,17 +351,95 @@ check_dia_l:
     if (board[0][4] == board[1][3] && board[0][4] == board[2][2] && board[0][4] == board[3][1] && board[0][4] != sp || board[1][3] == board[2][2] && board[1][3] == board[3][1] && board[1][3] == board[4][0] && board[1][3] != sp || board[0][3] == board[1][2] && board[0][3] == board[2][1] && board[0][3] == board[3][0] && board[0][3] != sp || board[1][4] == board[2][3] && board[1][4] == board[3][2] && board[1][4] == board[4][1] && board[1][4] != sp){
         goto win;
     }
-    else{
-        goto check_count;
-    }
+
+    goto f2;
 
 
-check_count:
-    // printf("Check count\n");
-    if (X_count < 4 || O_count < 4){
-        goto win;
+f1:
+    x = array[0]-1;
+    y = array[1]-1;
+
+    if (U == dir){
+        if (turn%2==1 && y-1 >= 0){
+            board[y][x] = ' ';
+            board[y-1][x] = 'X';
+            y -= 1;
+            show();
+        }
+        else if (turn%2==0 && y-1 >= 0){
+            board[y][x] = ' ';
+            board[y-1][x] = 'O';
+            y -= 1;
+            show();
+        }
     }
-    else{
+    else if (D == dir){
+        if (turn%2==1 && y+1 < 5){
+            board[y][x] = ' ';
+            board[y+1][x] = 'X';
+            y += 1;
+            show();
+        }
+        else if (turn%2==0 && y+1 < 5){
+            board[y][x] = ' ';
+            board[y+1][x] = 'O';
+            y += 1;
+            show();
+        }
+    }
+    else if (L == dir){
+        if (turn%2==1 && x-1 >= 0){
+            board[y][x] = ' ';
+            board[y][x-1] = 'X';
+            x -= 1;
+            show();
+        }
+        else if (turn%2==0 && x-1 >= 0){
+            board[y][x] = ' ';
+            board[y][x-1] = 'O';
+            x -= 1;
+            show();
+        }
+    }
+    else if (R == dir){
+        if (turn%2==1 && x+1 < 5){
+            board[y][x] = ' ';
+            board[y][x+1] = 'X';
+            x += 1;
+            show();
+        }
+        else if (turn%2==0 && x+1 < 5){
+            board[y][x] = ' ';
+            board[y][x+1] = 'O';
+            x += 1;
+            show();
+        }
+    }
+
+    printf("\nyou get a bonus !!!\n\n");
+    printf("select column you want to move in the same row :");
+    scanf("%d",&f1_bonus);
+    board[y][x] = ' ';
+    if (turn%2==1){
+        board[y][f1_bonus-1] = 'X';
+    }
+    else if (turn%2==0){
+        board[y][f1_bonus-1] = 'O';
+    }
+    show();
+    goto check_row;
+
+f2:
+    for (int i = 1; i<4; i++){
+        for (int j = 1; j<4; j++){
+            if (board[i][j] == board[i][j+1] && board[i][j] == board[i][j-1] && board[i][j] == board[i-1][j] && board[i][j] == board[i+1][j] && board[i][j] != sp){
+                turn++;
+                goto win;
+                break;
+            }
+        }
+    }
+    {
         turn++;
         if (turn%2==1){
             goto p1;
@@ -317,166 +448,6 @@ check_count:
             goto p2;
         }
     }
-
-
-f1:
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 4; j++){
-            if (board[i][j] == board[i][j+1] && board[i][j] == board[i+1][j] && board[i][j] == board[i+1][j+1] && board[i][j] != sp){
-                if (board[i][j] == p1_piece){
-                    f_val = 0;
-                    goto f_remove;
-                }
-                else if (board[i][j] == p2_piece){
-                    f_val = 1;
-                    goto f_remove;
-                }
-            }
-        }
-    }
-    goto f2;
-
-f2:
-    // 0,0 to 4,4
-    if (board[0][0] == board[4][4] && board[0][0] != sp && board[1][1] == board[2][2] && board[1][1] == board[3][3] && board[1][1] != sp && board[1][1] != board[0][0]){
-        // printf("in con f2\n");
-        goto f2_remove;
-    }
-    // #################################################
-    // ###                                           ###
-    // ###                    DIA-L                  ###
-    // ###                                           ###
-    // #################################################
-    // 4,0 to 0,4
-    else if (board[0][4] == board[4][0] && board[0][4] != sp && board[1][3] == board[2][2] && board[1][3] == board[3][1] && board[1][3] != sp && board[1][3] != board[4][0]){
-        // printf("in con f2\n");
-        goto f2_remove_2;
-    }
-
-    else{
-        goto check_row;
-    }
-
-f_remove:
-    if (turn%2 == 0 && f_val == 1){
-        for (int i = 0; i < 5 ; i++){
-            for (int j = 0; j < 5 ; j++){
-                if (board[i][j] == p1_piece){
-                    board[i][j]= ' ';
-                    X_count -= 1;
-                    show();
-                    printf("\nP1 your piece has been removed!!!\n");
-                    goto check_row;
-                }
-            }
-        }
-    }
-    else if (turn%2 == 1 && f_val == 0){
-        for (int i = 0; i < 5 ; i++){
-            for (int j = 0; j < 5 ; j++){
-                if (board[i][j] == p2_piece){
-                    board[i][j]= ' ';
-                    O_count -= 1;
-                    show();
-                    printf("\nP2 your piece has been removed!!!\n");
-                    goto check_row;
-                }
-            }
-        }       
-    }
-
-    goto check_row;
-
-f2_remove:
-    // printf("%d",turn);
-    // printf("\n in f2 remove \n");
-    if (turn%2 == 1){
-        if (board[1][1] == p1_piece){
-            board[1][1] = ' ';
-            show();
-            printf("\nP1 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[1][1] == p1_piece){
-            board[2][2] = ' ';
-            show();
-            printf("\nP1 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[3][3] == p1_piece){
-            board[3][3] = ' ';
-            show();
-            printf("\nP1 your piece has been removed!!!\n");
-            goto check_row;
-        }
-    }
-    if (turn%2 == 0){
-        if (board[1][1] == p2_piece){
-            board[1][1] = ' ';
-            show();
-            printf("\nP2 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[2][2] == p2_piece){
-            board[2][2] = ' ';
-            show();
-            printf("\nP2 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[3][3] == p2_piece){
-            board[3][3] = ' ';
-            show();
-            printf("\nP2 your piece has been removed!!!\n");
-            goto check_row;
-        }
-    }
-    goto check_row;
-
-
-f2_remove_2:
-    // printf("%d",turn);
-    // printf("\n in f2 remove \n");
-    if (turn%2 == 1){
-        if (board[1][3] == p1_piece){
-            board[1][3] = ' ';
-            show();
-            printf("\nP1 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[2][2] == p1_piece){
-            board[2][2] = ' ';
-            show();
-            printf("\nP1 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[3][1] == p1_piece){
-            board[3][1] = ' ';
-            show();
-            printf("\nP1 your piece has been removed!!!\n");
-            goto check_row;
-        }
-    }
-    if (turn%2 == 0){
-        if (board[1][3] == p2_piece){
-            board[1][3] = ' ';
-            show();
-            printf("\nP2 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[2][2] == p2_piece){
-            board[2][2] = ' ';
-            show();
-            printf("\nP2 your piece has been removed!!!\n");
-            goto check_row;
-        }
-        else if (board[3][1] == p2_piece){
-            board[3][1] = ' ';
-            show();
-            printf("\nP2 your piece has been removed!!!\n");
-            goto check_row;
-        }
-    }
-    goto check_row;
 
 win:
     if (turn%2==1){
